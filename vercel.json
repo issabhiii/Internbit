@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "buildCommand": "echo 'Build already done'",
+  "outputDirectory": "build/web",
+  "installCommand": "echo 'No install needed'"
+}
+

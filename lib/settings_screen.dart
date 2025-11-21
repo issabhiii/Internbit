@@ -45,6 +45,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             textColor: textColor,
             iconColor: iconColor,
           ),
+          // Refresh Stats
+          _buildSettingTile(
+            label: "Refresh Stats",
+            icon: Icons.refresh,
+            onTap: () => _refreshStats(context),
+            tileColor: tileColor,
+            textColor: textColor,
+            iconColor: iconColor,
+          ),
           // Feedback
           _buildSettingTile(
             label: "Feedback",
@@ -251,6 +260,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       }
     }
+  }
+
+  void _refreshStats(BuildContext context) async {
+    // Navigate back and show message
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Stats will refresh when you return to Profile page."),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   void _showFeedbackDialog(BuildContext context) {

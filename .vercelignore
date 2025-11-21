@@ -1,0 +1,44 @@
+# Exclude everything except build/web
+*
+!build
+!build/web
+!vercel.json
+
+# Exclude large files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.pdf
+*.zip
+*.tar
+*.gz
+
+# Exclude build artifacts
+android/
+ios/
+linux/
+macos/
+windows/
+build/android/
+build/ios/
+build/linux/
+build/macos/
+build/windows/
+
+# Exclude source files (only need build/web)
+lib/
+test/
+.dart_tool/
+.packages
+pubspec.yaml
+pubspec.lock
+
+# Exclude other unnecessary files
+.git/
+.gitignore
+README.md
+*.md
+analysis_options.yaml
+

@@ -105,7 +105,36 @@ class _MemoryPuzzleAppState extends State<MemoryPuzzleApp> {
         brightness: Brightness.dark,
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const HomePage(),
+      home: const MainPageView(),
+    );
+  }
+}
+
+// ------------------------------------------------------------
+//                    MAIN PAGE VIEW (SWIPE NAVIGATION)
+// ------------------------------------------------------------
+
+class MainPageView extends StatefulWidget {
+  const MainPageView({super.key});
+
+  @override
+  State<MainPageView> createState() => _MainPageViewState();
+}
+
+class _MainPageViewState extends State<MainPageView> {
+  final PageController _pageController = PageController(initialPage: 0);
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      controller: _pageController,
+      children: const [HomePage(), QuestScreen(), ProfilePage()],
     );
   }
 }
@@ -365,28 +394,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
       appBar: AppBar(
         title: const Text('Memory Puzzle Game'),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
-              );
-            },
-            tooltip: 'Profile',
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
-              );
-            },
-            tooltip: 'Settings',
-          ),
-        ],
       ),
       body: Stack(
         children: [
@@ -2012,27 +2019,25 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                   const SizedBox(height: 32),
-
-                  // Data Management
-                  Text(
-                    'Data Management',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  OutlinedButton.icon(
-                    onPressed: _load,
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Refresh Stats'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                  ),
                 ],
               ),
             ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FilledButton.icon(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          },
+          icon: const Icon(Icons.settings),
+          label: const Text('Settings'),
+          style: FilledButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+          ),
+        ),
+      ),
     );
   }
 
