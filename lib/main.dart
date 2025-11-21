@@ -1106,13 +1106,24 @@ class _MemoryGamePageState extends State<MemoryGamePage> {
           ),
           FilledButton(
             onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ProfilePage()),
-              );
+              Navigator.pop(context); // Close the win dialog
+              // If it's a quest game, go back to quest screen, otherwise go to profile
+              if (widget.gameData != null &&
+                  widget.gameData!['theme']?.toString() == 'quest') {
+                Navigator.pop(context); // Go back to quest screen
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfilePage()),
+                );
+              }
             },
-            child: const Text("Profile"),
+            child: Text(
+              widget.gameData != null &&
+                      widget.gameData!['theme']?.toString() == 'quest'
+                  ? "Play Next"
+                  : "Profile",
+            ),
           ),
         ],
       ),

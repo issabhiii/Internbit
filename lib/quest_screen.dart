@@ -62,7 +62,7 @@ class _QuestScreenState extends State<QuestScreen> {
           .from('games')
           .select('id, questions, pairs, gameid, theme, reviewed')
           .eq('theme', 'quest')
-          .order('gameid');
+          .order('gameid', ascending: true);
 
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
@@ -95,9 +95,9 @@ class _QuestScreenState extends State<QuestScreen> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.orange,
-                Colors.red,
-                Colors.pink,
+                Colors.blue.shade400,
+                Colors.purple.shade400,
+                Colors.blue.shade600,
               ],
             ),
           ),
@@ -134,14 +134,14 @@ class _QuestScreenState extends State<QuestScreen> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.orange.withOpacity(0.3),
-                            Colors.red.withOpacity(0.2),
+                            Colors.blue.withOpacity(0.3),
+                            Colors.purple.withOpacity(0.2),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                         strokeWidth: 3,
                       ),
                     ),
@@ -294,7 +294,7 @@ class _QuestPillItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brand = const Color(0xFFFF6633);
+    final brand = const Color(0xFF6B46C1); // Purple-blue color
     final progress = isCompleted ? 1.0 : 0.0;
 
     return Row(

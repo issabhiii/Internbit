@@ -45,15 +45,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             textColor: textColor,
             iconColor: iconColor,
           ),
-          // Notifications
-          _buildSettingTile(
-            label: "Notifications",
-            icon: Icons.notifications,
-            onTap: () => _showNotificationsSheet(context),
-            tileColor: tileColor,
-            textColor: textColor,
-            iconColor: iconColor,
-          ),
           // Feedback
           _buildSettingTile(
             label: "Feedback",
@@ -262,82 +253,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  void _showNotificationsSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      builder: (_) {
-        bool notifyStreaks = true;
-        bool notifyQuizzes = true;
-        bool notifyNewContent = true;
-        return StatefulBuilder(
-          builder: (ctx, setSheet) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Notifications",
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SwitchListTile(
-                    title: const Text("Streaks"),
-                    value: notifyStreaks,
-                    onChanged: (v) => setSheet(() => notifyStreaks = v),
-                  ),
-                  SwitchListTile(
-                    title: const Text("Quizzes"),
-                    value: notifyQuizzes,
-                    onChanged: (v) => setSheet(() => notifyQuizzes = v),
-                  ),
-                  SwitchListTile(
-                    title: const Text("New content"),
-                    value: notifyNewContent,
-                    onChanged: (v) => setSheet(() => notifyNewContent = v),
-                  ),
-                  const SizedBox(height: 4),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.check),
-                      label: const Text("Done"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Notification prefs saved"),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   void _showFeedbackDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text("Feedback"),
         content: const Text(
-          "We'd love to hear from you. Send feedback to support@bhashagroup.com",
+          "We'd love to hear from you. Send feedback to abhinav.jain.0461@gmail.com",
         ),
         actions: [
           TextButton(
             onPressed: () async {
               await Clipboard.setData(
-                const ClipboardData(text: "support@bhashagroup.com"),
+                const ClipboardData(text: "abhinav.jain.0461@gmail.com"),
               );
               if (context.mounted) {
                 Navigator.pop(context);
