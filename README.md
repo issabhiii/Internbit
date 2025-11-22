@@ -1,16 +1,94 @@
-# intershala_project
+🎮 Memory Puzzle – Flutter + Supabase
 
-A new Flutter project.
+Memory Puzzle is a cross-platform Flutter application featuring Quest Mode, Supabase authentication, and interactive memory-matching gameplay.
+It demonstrates structured UI design, cloud-stored game data, and persistent user progress tracking.
 
-## Getting Started
+🚀 Features
+🔐 Authentication
 
-This project is a starting point for a Flutter application.
+Email + Password login
 
-A few resources to get you started if this is your first Flutter project:
+Google OAuth (Supabase)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Secure session handling
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Logout & success animation
+
+🧩 Quest Mode
+
+Quests loaded from Supabase games table
+
+Unlockable levels (each quest depends on previous completion)
+
+Memory game powered by JSON card-pair data
+
+User progress saved in users.games_complete
+
+🎨 Dynamic Theming
+
+Light/Dark mode toggle
+
+Smooth UI gradients
+
+Modern components + animations
+
+⚙️ Settings
+
+Dark mode switch
+
+Refresh stats
+
+Feedback popup
+
+Privacy Policy / Terms of Service
+
+Logout with success overlay
+
+🗄️ Supabase Tables
+games
+Column	Type	Description
+id	bigint (PK)	Auto-generated
+gameid	bigint	Quest number
+questions	text	Quest title
+pairs	json	Memory card pairs
+theme	text	"quest"
+reviewed	text	Status
+users
+Column	Type
+email	text
+games_complete	array/json of completed game IDs
+🧱 Tech Stack
+
+Flutter 3
+
+Supabase (Auth + Database)
+
+Dart
+
+Material 3 UI
+
+Google OAuth
+
+▶️ Run Locally
+flutter pub get
+flutter run
+
+
+For Web Google Sign-in, ensure:
+
+Correct Authorized redirect URIs
+
+Correct Authorized JavaScript origins
+in Google Cloud Console + Supabase.
+
+📁 Main File Structure
+lib/
+ ├── quest_screen.dart
+ ├── memory_game_page.dart
+ ├── settings_screen.dart
+ ├── theme_manager.dart
+ ├── main.dart
+
+📄 License
+
+This project is for educational and internship demonstration purposes.
