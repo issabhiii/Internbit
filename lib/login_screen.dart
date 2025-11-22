@@ -21,7 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _repeatPasswordController = TextEditingController();
+  final TextEditingController _repeatPasswordController =
+      TextEditingController();
   final ValueNotifier<Set<String>> _unmetCriteria = ValueNotifier({});
   Timer? _debounce;
 
@@ -82,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() => _loading = false);
       return;
     }
-    
+
     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
       _showError("Please enter a valid email address.");
       setState(() => _loading = false);
@@ -95,7 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    if (!isLoginMode && _passwordController.text != _repeatPasswordController.text) {
+    if (!isLoginMode &&
+        _passwordController.text != _repeatPasswordController.text) {
       _showError("Passwords do not match");
       setState(() => _loading = false);
       return;
@@ -123,8 +125,8 @@ class _LoginScreenState extends State<LoginScreen> {
           if (existingUser == null) {
             // Insert new user - let id auto-generate
             await supabase.from('users').insert({
-              'name': _nameController.text.trim().isEmpty 
-                  ? email.split('@').first 
+              'name': _nameController.text.trim().isEmpty
+                  ? email.split('@').first
                   : _nameController.text.trim(),
               'email': email,
               'games_completed': 0,
@@ -133,17 +135,22 @@ class _LoginScreenState extends State<LoginScreen> {
             debugPrint('✅ [Sign-Up] New user record created (Google auth)');
           } else {
             // Update existing user by email
-            await supabase.from('users').update({
-              'name': _nameController.text.trim().isEmpty 
-                  ? email.split('@').first 
-                  : _nameController.text.trim(),
-            }).eq('email', email);
-            debugPrint('✅ [Sign-Up] Existing user record updated (Google auth)');
+            await supabase
+                .from('users')
+                .update({
+                  'name': _nameController.text.trim().isEmpty
+                      ? email.split('@').first
+                      : _nameController.text.trim(),
+                })
+                .eq('email', email);
+            debugPrint(
+              '✅ [Sign-Up] Existing user record updated (Google auth)',
+            );
           }
         } catch (dbError) {
           debugPrint('❌ [Sign-Up] Database error (Google auth): $dbError');
           final errorMsg = dbError.toString();
-          if (errorMsg.contains("duplicate key") || 
+          if (errorMsg.contains("duplicate key") ||
               errorMsg.contains("unique constraint") ||
               errorMsg.contains("already exists")) {
             debugPrint('⚠️ [Sign-Up] User already exists, continuing...');
@@ -178,8 +185,8 @@ class _LoginScreenState extends State<LoginScreen> {
           try {
             await supabase.from('users').insert({
               // Don't insert 'id' - let it auto-generate as bigint
-              'name': _nameController.text.trim().isEmpty 
-                  ? email.split('@').first 
+              'name': _nameController.text.trim().isEmpty
+                  ? email.split('@').first
                   : _nameController.text.trim(),
               'email': email,
               'games_completed': 0,
@@ -190,10 +197,12 @@ class _LoginScreenState extends State<LoginScreen> {
             debugPrint('❌ [Sign-Up] Database error: $dbError');
             // If insert fails, try to continue anyway (user is already authenticated)
             final errorMsg = dbError.toString();
-            if (errorMsg.contains("duplicate key") || 
+            if (errorMsg.contains("duplicate key") ||
                 errorMsg.contains("already exists") ||
                 errorMsg.contains("unique constraint")) {
-              debugPrint('⚠️ [Sign-Up] User record already exists, continuing...');
+              debugPrint(
+                '⚠️ [Sign-Up] User record already exists, continuing...',
+              );
             } else {
               rethrow;
             }
@@ -203,7 +212,9 @@ class _LoginScreenState extends State<LoginScreen> {
           debugPrint('❌ [Sign-Up] Auth error: $e');
           if (errorMsg.contains("user_already_exists") ||
               errorMsg.contains("already registered")) {
-            _showError("This email is already registered. Please sign in instead.");
+            _showError(
+              "This email is already registered. Please sign in instead.",
+            );
             setState(() => _loading = false);
             return;
           }
@@ -219,34 +230,43 @@ class _LoginScreenState extends State<LoginScreen> {
       final errorMsg = e.toString();
       debugPrint('❌ [Sign-Up] Error: $e');
       debugPrint('❌ [Sign-Up] Error message: $errorMsg');
-      
+
       if (errorMsg.contains("user_already_exists") ||
           errorMsg.contains("already registered") ||
           errorMsg.contains("User already registered")) {
         _showError("That email is already registered. Please sign in instead.");
-      } else if (errorMsg.contains("password") || 
-                 errorMsg.contains("Password") ||
-                 errorMsg.contains("password is too weak")) {
-        _showError("Your password is too weak. Please follow the requirements above.");
-      } else if (errorMsg.contains("Invalid API key") || 
-                 errorMsg.contains("JWT") ||
-                 errorMsg.contains("configuration") ||
-                 errorMsg.contains("YOUR_SUPABASE")) {
-        _showError("Configuration error: Please check your Supabase credentials in main.dart");
-      } else if (errorMsg.contains("relation") && errorMsg.contains("does not exist")) {
-        _showError("Database error: The 'users' table doesn't exist. Please create it in Supabase.");
-      } else if (errorMsg.contains("Failed host lookup") || 
-                 errorMsg.contains("network") ||
-                 errorMsg.contains("SocketException") ||
-                 errorMsg.contains("Connection")) {
-        _showError("No internet connection. Please check your network and try again.");
+      } else if (errorMsg.contains("password") ||
+          errorMsg.contains("Password") ||
+          errorMsg.contains("password is too weak")) {
+        _showError(
+          "Your password is too weak. Please follow the requirements above.",
+        );
+      } else if (errorMsg.contains("Invalid API key") ||
+          errorMsg.contains("JWT") ||
+          errorMsg.contains("configuration") ||
+          errorMsg.contains("YOUR_SUPABASE")) {
+        _showError(
+          "Configuration error: Please check your Supabase credentials in main.dart",
+        );
+      } else if (errorMsg.contains("relation") &&
+          errorMsg.contains("does not exist")) {
+        _showError(
+          "Database error: The 'users' table doesn't exist. Please create it in Supabase.",
+        );
+      } else if (errorMsg.contains("Failed host lookup") ||
+          errorMsg.contains("network") ||
+          errorMsg.contains("SocketException") ||
+          errorMsg.contains("Connection")) {
+        _showError(
+          "No internet connection. Please check your network and try again.",
+        );
       } else if (errorMsg.contains("timeout") || errorMsg.contains("Timeout")) {
         _showError("Request timed out. Please try again.");
       } else if (errorMsg.contains("email") && errorMsg.contains("invalid")) {
         _showError("Please enter a valid email address.");
-      } else if (errorMsg.contains("PostgrestException") || 
-                 errorMsg.contains("database") ||
-                 errorMsg.contains("22P02")) {
+      } else if (errorMsg.contains("PostgrestException") ||
+          errorMsg.contains("database") ||
+          errorMsg.contains("22P02")) {
         _showError("Database error. Please check your database configuration.");
       } else {
         // Show a more helpful error message
@@ -254,8 +274,8 @@ class _LoginScreenState extends State<LoginScreen> {
             .replaceAll('Exception: ', '')
             .replaceAll('PostgrestException: ', '')
             .replaceAll('AuthException: ', '');
-        final displayError = cleanError.length > 120 
-            ? cleanError.substring(0, 120) + '...' 
+        final displayError = cleanError.length > 120
+            ? cleanError.substring(0, 120) + '...'
             : cleanError;
         _showError("Error: $displayError");
         debugPrint('[SIGN-UP] Full error details: $errorMsg');
@@ -270,26 +290,26 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     final supabase = Supabase.instance.client;
     if (_loading) return;
-    
+
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    
+
     // Validate inputs
     if (email.isEmpty) {
       _showError("Please enter your email address.");
       return;
     }
-    
+
     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
       _showError("Please enter a valid email address.");
       return;
     }
-    
+
     if (password.isEmpty) {
       _showError("Please enter your password.");
       return;
     }
-    
+
     setState(() => _loading = true);
     try {
       debugPrint('[LOGIN] Attempting to sign in with email: $email');
@@ -304,7 +324,9 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      debugPrint('[LOGIN] ✅ Login successful for user: ${response.user!.email}');
+      debugPrint(
+        '[LOGIN] ✅ Login successful for user: ${response.user!.email}',
+      );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showMessage("Welcome back!");
         if (mounted) {
@@ -327,11 +349,20 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final supabase = Supabase.instance.client;
 
+      // Get the current origin for web (works for both localhost and Vercel)
+      String redirectUrl;
+      if (kIsWeb) {
+        final uri = Uri.base;
+        // Use origin + callback path for web
+        redirectUrl =
+            '${uri.scheme}://${uri.host}${uri.hasPort ? ':${uri.port}' : ''}/auth/v1/callback';
+      } else {
+        redirectUrl = 'com.intershala.memorygame://login-callback/';
+      }
+
       await supabase.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: kIsWeb
-            ? Uri.base.toString()
-            : 'com.intershala.memorygame://login-callback/',
+        redirectTo: redirectUrl,
         authScreenLaunchMode: LaunchMode.externalApplication,
         scopes: 'email profile',
       );
@@ -346,7 +377,9 @@ class _LoginScreenState extends State<LoginScreen> {
         final session = supabase.auth.currentSession;
         if (session != null) {
           final user = session.user;
-          debugPrint('✅ [Google Sign-In] Session found for user: ${user.email}');
+          debugPrint(
+            '✅ [Google Sign-In] Session found for user: ${user.email}',
+          );
 
           try {
             // Check if user exists by email (since id is auto-generated bigint)
@@ -359,7 +392,8 @@ class _LoginScreenState extends State<LoginScreen> {
             if (userRecord == null) {
               debugPrint('🆕 [Google Sign-In] New user detected');
 
-              String? userName = user.userMetadata?['full_name'] ??
+              String? userName =
+                  user.userMetadata?['full_name'] ??
                   user.userMetadata?['name'] ??
                   user.userMetadata?['display_name'];
 
@@ -403,15 +437,19 @@ class _LoginScreenState extends State<LoginScreen> {
       final errorMsg = e.toString();
       if (mounted) {
         setState(() => _loading = false);
-        
+
         if (errorMsg.contains("cancelled") || errorMsg.contains("canceled")) {
           _showError("Google sign-in was cancelled.");
-        } else if (errorMsg.contains("network") || errorMsg.contains("Connection")) {
+        } else if (errorMsg.contains("network") ||
+            errorMsg.contains("Connection")) {
           _showError("No internet connection. Please check your network.");
         } else if (errorMsg.contains("timeout")) {
           _showError("Sign-in timed out. Please try again.");
-        } else if (errorMsg.contains("configuration") || errorMsg.contains("redirect")) {
-          _showError("Google sign-in configuration error. Please check your Supabase settings.");
+        } else if (errorMsg.contains("configuration") ||
+            errorMsg.contains("redirect")) {
+          _showError(
+            "Google sign-in configuration error. Please check your Supabase settings.",
+          );
         } else {
           _showError("Error signing in with Google. Please try again.");
         }
@@ -422,27 +460,36 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleAuthError(dynamic error) {
     final message = error.toString();
     debugPrint('[AUTH] Handling error: $message');
-    
+
     if (message.contains("Invalid login credentials") ||
         message.contains("Invalid credentials") ||
         message.contains("email or password") ||
         message.contains("wrong password")) {
-      _showError("Incorrect email or password. Please check your credentials and try again.");
+      _showError(
+        "Incorrect email or password. Please check your credentials and try again.",
+      );
     } else if (message.contains("already registered") ||
-               message.contains("user_already_exists") ||
-               message.contains("User already registered")) {
+        message.contains("user_already_exists") ||
+        message.contains("User already registered")) {
       _showError("That email is already registered. Please sign in instead.");
     } else if (message.contains("Failed host lookup") ||
-               message.contains("network") ||
-               message.contains("SocketException") ||
-               message.contains("Connection")) {
-      _showError("No internet connection. Please check your network and try again.");
+        message.contains("network") ||
+        message.contains("SocketException") ||
+        message.contains("Connection")) {
+      _showError(
+        "No internet connection. Please check your network and try again.",
+      );
     } else if (message.contains("Invalid API key") ||
-               message.contains("JWT") ||
-               message.contains("configuration")) {
-      _showError("Configuration error. Please check your Supabase credentials.");
-    } else if (message.contains("relation") && message.contains("does not exist")) {
-      _showError("Database error: The 'users' table doesn't exist. Please create it in Supabase.");
+        message.contains("JWT") ||
+        message.contains("configuration")) {
+      _showError(
+        "Configuration error. Please check your Supabase credentials.",
+      );
+    } else if (message.contains("relation") &&
+        message.contains("does not exist")) {
+      _showError(
+        "Database error: The 'users' table doesn't exist. Please create it in Supabase.",
+      );
     } else if (message.contains("timeout") || message.contains("Timeout")) {
       _showError("Request timed out. Please try again.");
     } else if (message.contains("password") && message.contains("weak")) {
@@ -451,8 +498,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _showError("Please enter a valid email address.");
     } else {
       // Show a more helpful error message
-      final errorText = message.length > 150 
-          ? message.substring(0, 150) + '...' 
+      final errorText = message.length > 150
+          ? message.substring(0, 150) + '...'
           : message;
       _showError("Error: $errorText");
       debugPrint('[AUTH] Unhandled error type: $message');
@@ -464,9 +511,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), backgroundColor: Colors.red),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red));
   }
 
   @override
@@ -487,11 +534,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             const SizedBox(height: 40),
-            const Icon(
-              Icons.memory,
-              size: 80,
-              color: Colors.white,
-            ),
+            const Icon(Icons.memory, size: 80, color: Colors.white),
             const SizedBox(height: 12),
             const Text(
               'MEMORY PUZZLE',
@@ -529,12 +572,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       if (!isLoginMode)
-                        _buildTextField(Icons.person, "Username",
-                            controller: _nameController),
-                      _buildTextField(Icons.email, "Email",
-                          controller: _emailController),
-                      _buildTextField(Icons.lock, "Password",
-                          isObscure: true, controller: _passwordController),
+                        _buildTextField(
+                          Icons.person,
+                          "Username",
+                          controller: _nameController,
+                        ),
+                      _buildTextField(
+                        Icons.email,
+                        "Email",
+                        controller: _emailController,
+                      ),
+                      _buildTextField(
+                        Icons.lock,
+                        "Password",
+                        isObscure: true,
+                        controller: _passwordController,
+                      ),
                       if (!isLoginMode)
                         ValueListenableBuilder<Set<String>>(
                           valueListenable: _unmetCriteria,
@@ -545,28 +598,34 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: unmet
-                                    .map((c) => Text(
-                                          '• Must include $c',
-                                          style: const TextStyle(
-                                              color: Colors.white, fontSize: 14),
-                                        ))
+                                    .map(
+                                      (c) => Text(
+                                        '• Must include $c',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    )
                                     .toList(),
                               ),
                             );
                           },
                         ),
                       if (!isLoginMode)
-                        _buildTextField(Icons.lock_outline, "Repeat Password",
-                            isObscure: true,
-                            controller: _repeatPasswordController),
+                        _buildTextField(
+                          Icons.lock_outline,
+                          "Repeat Password",
+                          isObscure: true,
+                          controller: _repeatPasswordController,
+                        ),
                       if (!isLoginMode) ...[
                         const SizedBox(height: 16),
                         _buildTermsCheckbox(),
                       ],
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: _loading ||
-                                (!isLoginMode && !_agreedToTerms)
+                        onPressed: _loading || (!isLoginMode && !_agreedToTerms)
                             ? null
                             : () async {
                                 if (isLoginMode) {
@@ -579,27 +638,37 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(
-                              vertical: 14, horizontal: 32),
+                            vertical: 14,
+                            horizontal: 32,
+                          ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
                         child: _loading
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : Text(
                                 isLoginMode ? "Login" : "Sign Up",
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                       ),
                       const SizedBox(height: 24),
                       Row(
                         children: [
                           Expanded(
-                              child: Divider(color: Colors.white.withOpacity(0.5))),
+                            child: Divider(
+                              color: Colors.white.withOpacity(0.5),
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
@@ -612,7 +681,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Expanded(
-                              child: Divider(color: Colors.white.withOpacity(0.5))),
+                            child: Divider(
+                              color: Colors.white.withOpacity(0.5),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 24),
@@ -624,8 +696,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
                                 ),
                               )
                             : const Text(
@@ -647,7 +720,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black87,
                           padding: const EdgeInsets.symmetric(
-                              vertical: 14, horizontal: 32),
+                            vertical: 14,
+                            horizontal: 32,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                             side: BorderSide(color: Colors.grey.shade300),
@@ -666,12 +741,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -686,10 +761,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildTextField(IconData icon, String hint,
-      {bool isObscure = false,
-      TextEditingController? controller,
-      String? errorText}) {
+  Widget _buildTextField(
+    IconData icon,
+    String hint, {
+    bool isObscure = false,
+    TextEditingController? controller,
+    String? errorText,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
@@ -774,8 +852,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               AppBar(
-                title: const Text('Terms & Conditions',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                title: const Text(
+                  'Terms & Conditions',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
                 automaticallyImplyLeading: false,
@@ -809,8 +889,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               AppBar(
-                title: const Text('Privacy Policy',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                title: const Text(
+                  'Privacy Policy',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
                 automaticallyImplyLeading: false,
@@ -838,20 +920,27 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Last updated: ${DateTime.now().toString().split(' ')[0]}',
-            style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+        Text(
+          'Last updated: ${DateTime.now().toString().split(' ')[0]}',
+          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+        ),
         const SizedBox(height: 24),
-        _buildSection('1. Acceptance of Terms',
-            'By using Memory Puzzle Game, you agree to these Terms.'),
+        _buildSection(
+          '1. Acceptance of Terms',
+          'By using Memory Puzzle Game, you agree to these Terms.',
+        ),
         const SizedBox(height: 20),
-        _buildSection('2. Game Rules',
-            'Play fairly. Do not use cheats or exploits.'),
+        _buildSection(
+          '2. Game Rules',
+          'Play fairly. Do not use cheats or exploits.',
+        ),
         const SizedBox(height: 20),
-        _buildSection('3. Accounts',
-            'You are responsible for maintaining account security.'),
+        _buildSection(
+          '3. Accounts',
+          'You are responsible for maintaining account security.',
+        ),
         const SizedBox(height: 20),
-        _buildSection('4. Data',
-            'Your game statistics are stored securely.'),
+        _buildSection('4. Data', 'Your game statistics are stored securely.'),
       ],
     );
   }
@@ -860,17 +949,25 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Last updated: ${DateTime.now().toString().split(' ')[0]}',
-            style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+        Text(
+          'Last updated: ${DateTime.now().toString().split(' ')[0]}',
+          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+        ),
         const SizedBox(height: 24),
-        _buildSection('Information We Collect',
-            'Account info: name, email. Game statistics: games completed, best ratio.'),
+        _buildSection(
+          'Information We Collect',
+          'Account info: name, email. Game statistics: games completed, best ratio.',
+        ),
         const SizedBox(height: 20),
-        _buildSection('How We Use Information',
-            'To provide and improve the game experience.'),
+        _buildSection(
+          'How We Use Information',
+          'To provide and improve the game experience.',
+        ),
         const SizedBox(height: 20),
-        _buildSection('Data Security',
-            'We use industry-standard security measures to protect your data.'),
+        _buildSection(
+          'Data Security',
+          'We use industry-standard security measures to protect your data.',
+        ),
       ],
     );
   }
@@ -879,14 +976,20 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
         const SizedBox(height: 8),
-        Text(content,
-            style: TextStyle(color: Colors.grey[700], fontSize: 15, height: 1.5)),
+        Text(
+          content,
+          style: TextStyle(color: Colors.grey[700], fontSize: 15, height: 1.5),
+        ),
       ],
     );
   }
 }
-

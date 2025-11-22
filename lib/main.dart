@@ -47,7 +47,7 @@ class MemoryPuzzleApp extends StatefulWidget {
 }
 
 class _MemoryPuzzleAppState extends State<MemoryPuzzleApp> {
-  bool _isDarkMode = false;
+  bool _isDarkMode = true; // Default to dark mode
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _MemoryPuzzleAppState extends State<MemoryPuzzleApp> {
   Future<void> _loadThemePreference() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final isDark = prefs.getBool('dark_mode') ?? false;
+      final isDark = prefs.getBool('dark_mode') ?? true; // Default to dark mode
       if (mounted) {
         setState(() {
           _isDarkMode = isDark;
@@ -144,7 +144,9 @@ class _MainPageViewState extends State<MainPageView> {
 // ------------------------------------------------------------
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback? onNavigateToProfile;
+
+  const HomePage({super.key, this.onNavigateToProfile});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -394,13 +396,39 @@ class _HomePageState extends State<HomePage> with RouteAware {
       appBar: AppBar(
         title: const Text('Memory Puzzle Game'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              if (widget.onNavigateToProfile != null) {
+                widget.onNavigateToProfile!();
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
+              }
+            },
+            tooltip: 'Profile',
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+            tooltip: 'Settings',
+          ),
+        ],
       ),
       body: Stack(
         children: [
           // Background image - fill 100% of screen
           Positioned.fill(
             child: Image.asset(
-              'lib/Gemini_Generated_Image_4sop514sop514sop (1).png',
+              'lib/Gemini_Generated_Image_dof1jgdof1jgdof1.png',
               fit: BoxFit.cover,
               alignment: Alignment.center,
               errorBuilder: (context, error, stackTrace) {
@@ -2019,25 +2047,28 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                   const SizedBox(height: 32),
+                  // Settings button at bottom of content
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.settings),
+                      label: const Text('Settings'),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: FilledButton.icon(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
-            );
-          },
-          icon: const Icon(Icons.settings),
-          label: const Text('Settings'),
-          style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-          ),
-        ),
-      ),
     );
   }
 

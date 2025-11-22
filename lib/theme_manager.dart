@@ -1,7 +1,7 @@
 // Theme manager to avoid circular dependencies
 class ThemeManager {
   static Function(bool)? _onThemeChanged;
-  static bool _isDarkMode = false;
+  static bool _isDarkMode = true; // Default to dark mode
 
   static void setCallback(Function(bool) callback) {
     _onThemeChanged = callback;
@@ -18,4 +18,3 @@ class ThemeManager {
 
   static bool get isDarkMode => _isDarkMode;
 }
-
